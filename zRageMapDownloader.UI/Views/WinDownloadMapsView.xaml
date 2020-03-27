@@ -4,9 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:zRageMapDownloader.Views"
+        xmlns:vm="clr-namespace:zRageMapDownloader.ViewsModels"
+        xmlns:converters="clr-namespace:zRageMapDownloader.Converters"
         mc:Ignorable="d"
-        Title="Map Downloader" Height="350" Width="500" ResizeMode="CanMinimize">
-    <Grid Margin="8">
+        Title="Map Downloader" Height="350" Width="500" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <vm:DownloadMapsViewModel x:Key="DownloadMapsViewModel"/>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:BoolToVisibilityConverterReversed x:Key="BoolToVisibilityConverterReversed"/>
+        <converters:BoolReversedConverter x:Key="BoolReversedConverter"/>
+    </Window.Resources>
+    <Grid Margin="8" DataContext="{StaticResource DownloadMapsViewModel}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -20,21 +28,23 @@
             </Grid.RowDefinitions>
 
             <TextBlock Text="Maps directory" Margin="0 0 0 2" Grid.Row="0"/>
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1" IsEnabled="{Binding DownloadInProgress, Converter={StaticResource BoolReversedConverter}, UpdateSourceTrigger=PropertyChanged}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox Text="" Padding="4 2" Grid.Column="0" VerticalContentAlignment="Center"/>
-                <Button Content="..." Grid.Column="1" Padding="8 2" Margin="4 0 0 0"/>
+                <TextBox Text="{Binding MapsDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="4 2" Grid.Column="0" VerticalContentAlignment="Center"/>
+                <Button Command="{Binding OpenFolderDialogCommand}" Content="..." Grid.Column="1" Padding="8 2" Margin="4 0 0 0"/>
             </Grid>
         </Grid>
 
-        <Button Grid.Row="1" Margin="0 12" HorizontalAlignment="Center" Padding="8" Content="Download maps"/>
+        <CheckBox IsEnabled="{Binding DownloadInProgress, Converter={StaticResource BoolReversedConverter}, UpdateSourceTrigger=PropertyChanged}" IsChecked="{Binding ReplaceExistingMaps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Replace any existing map"/>
+        <Button Visibility="{Binding DownloadInProgress, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverterReversed}}" Command="{Binding StartDownloadCommand}" Grid.Row="1" Margin="0 12" HorizontalAlignment="Right" Padding="8" Content="Download maps"/>
+        <Button Visibility="{Binding DownloadInProgress, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" Command="{Binding CancelDownloadCommand}" Grid.Row="1" Margin="0 12" HorizontalAlignment="Right" Padding="8" Content="Cancel Download"/>
 
-        <TextBox Padding="4" AcceptsReturn="True" IsReadOnly="True" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto"/>
+        <TextBox Text="{Binding Log, UpdateSourceTrigger=PropertyChanged}" Padding="4" AcceptsReturn="True" IsReadOnly="True" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
 
-        <ProgressBar Grid.Row="3" Height="32" Margin="0 8 0 0"/>
+        <ProgressBar Value="{Binding Progress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="{Binding MapsToDownload, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Height="32" Margin="0 8 0 0"/>
     </Grid>
 </Window>

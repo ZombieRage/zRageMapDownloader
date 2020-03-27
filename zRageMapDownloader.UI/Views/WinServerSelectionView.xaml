@@ -4,9 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:zRageMapDownloader.Views"
+        xmlns:vm="clr-namespace:zRageMapDownloader.ViewsModels"
         mc:Ignorable="d"
-        Title="Map Downloader" Height="350" Width="500" Background="#eee">
-    <Grid Margin="8">
+        Title="Map Downloader" Height="350" Width="500" Background="#eee" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <vm:ServerSelectionViewModel x:Key="ServerSelectionViewModel"/>
+    </Window.Resources>
+    <Grid Margin="8" DataContext="{StaticResource ServerSelectionViewModel}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
@@ -21,7 +25,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Margin="0 0 0 2" Grid.Row="0" Text="Avaliable servers"/>
-            <ListBox Grid.Row="1"/>
+            <ListBox Grid.Row="1" ItemsSource="{Binding AvaliableServers, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedServer, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"/>
         </Grid>
 
         <Grid Grid.Row="1" Margin="0 8 0 0">
@@ -31,7 +35,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock VerticalAlignment="Center" Grid.Column="0" Margin="0 0 8 0" Text="Fastdl URL:"/>
-            <TextBox Grid.Column="1" Text="" Padding="4 2" VerticalContentAlignment="Center"/>
+            <TextBox Text="{Binding SelectedServer.FastdlUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Padding="4 2" VerticalContentAlignment="Center"/>
         </Grid>
 
         <Grid Grid.Row="2" Margin="0 8 0 0">
@@ -41,9 +45,9 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock VerticalAlignment="Center" Grid.Column="0" Margin="0 0 8 0" Text="Map list URL:"/>
-            <TextBox Grid.Column="1" Text="" Padding="4 2" VerticalContentAlignment="Center"/>
+            <TextBox Text="{Binding SelectedServer.MapListUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Padding="4 2" VerticalContentAlignment="Center"/>
         </Grid>
 
-        <Button Grid.Row="3" Margin="0 16 0 0" HorizontalAlignment="Center" Content="Start" Padding="24 8"/>
+        <Button Command="{Binding SelectServerContextCommand}" Grid.Row="3" Margin="0 16 0 0" HorizontalAlignment="Center" Content="Start" Padding="24 8"/>
     </Grid>
 </Window>
