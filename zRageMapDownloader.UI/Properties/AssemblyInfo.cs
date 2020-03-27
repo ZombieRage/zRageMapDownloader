@@ -7,10 +7,10 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("zRageMapDownloader")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("ZRAGE BRASIL MapDownloader")]
+[assembly: AssemblyDescription("Downloads all the maps hosted in a remote download file system")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Zombie Rage")]
 [assembly: AssemblyProduct("zRageMapDownloader")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
@@ -53,3 +53,5 @@ using System.Windows;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: Guid("0f6f7de9-ef9b-4ec9-b707-8dad9d1978aa")]
+[assembly: NeutralResourcesLanguage("en")]
