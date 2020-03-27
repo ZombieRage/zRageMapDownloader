@@ -48,6 +48,6 @@
             <TextBox Grid.Column="1" Text="{Binding SelectedServer.MapListUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Padding="4 2" VerticalContentAlignment="Center" BorderBrush="Transparent"/>
         </Grid>
 
-        <Button Command="{Binding SelectServerContextCommand}" Grid.Row="3" Margin="0 16 0 0" HorizontalAlignment="Center" Content="Start" Padding="24 8"/>
+        <Button Command="{Binding SelectServerContextCommand}" Grid.Row="3" Margin="0 16 0 0" HorizontalAlignment="Right" Content="Start" Padding="24 8"/>
     </Grid>
 </Window>
