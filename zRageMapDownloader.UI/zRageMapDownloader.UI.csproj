@@ -9,7 +9,7 @@
     <ProjectGuid>{38C62B43-7B8E-4B53-8555-FA4FEE58B06A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>zRageMapDownloader</RootNamespace>
-    <AssemblyName>zRageMapDownloader</AssemblyName>
+    <AssemblyName>ZRAGE BRASIL Map Downloader</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -38,7 +38,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>download-icon.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\Images\download-icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>zRageMapDownloader.App</StartupObject>
