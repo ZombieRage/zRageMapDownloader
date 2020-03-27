@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:zRageMapDownloader.Views"
         xmlns:vm="clr-namespace:zRageMapDownloader.ViewsModels"
         mc:Ignorable="d"
-        Title="Map Downloader" Height="350" Width="500" Background="#eee" WindowStartupLocation="CenterScreen">
+        Title="Map Downloader" Height="350" Width="500" Background="#eee" WindowStartupLocation="CenterScreen" Icon="/zRageMapDownloader;component/Assets/Images/download-icon.ico">
     <Window.Resources>
         <vm:ServerSelectionViewModel x:Key="ServerSelectionViewModel"/>
     </Window.Resources>
