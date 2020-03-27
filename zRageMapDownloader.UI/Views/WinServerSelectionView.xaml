@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:zRageMapDownloader.Views"
         xmlns:vm="clr-namespace:zRageMapDownloader.ViewsModels"
         mc:Ignorable="d"
-        Title="Map Downloader" Height="350" Width="500" Background="#eee" WindowStartupLocation="CenterScreen" Icon="/zRageMapDownloader;component/Assets/Images/download-icon.ico" ResizeMode="CanMinimize">
+        Title="ZRAGE BRASIL Map Downloader" Height="450" Width="600" MinWidth="500" MinHeight="300" Background="#eee" WindowStartupLocation="CenterScreen" Icon="/zRageMapDownloader;component/Assets/Images/download-icon.ico">
     <Window.Resources>
         <vm:ServerSelectionViewModel x:Key="ServerSelectionViewModel"/>
     </Window.Resources>
@@ -35,17 +35,17 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock VerticalAlignment="Center" Grid.Column="0" Margin="0 0 8 0" Text="Fastdl URL:"/>
-            <TextBox Text="{Binding SelectedServer.FastdlUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Padding="4 2" VerticalContentAlignment="Center"/>
+            <TextBox IsReadOnly="True" Text="{Binding SelectedServer.FastdlUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Padding="4 2" VerticalContentAlignment="Center"/>
         </Grid>
 
-        <Grid Grid.Row="2" Margin="0 8 0 0">
+        <Grid Grid.Row="2" Margin="0 8 0 0" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="5*"/>
             </Grid.ColumnDefinitions>
 
             <TextBlock VerticalAlignment="Center" Grid.Column="0" Margin="0 0 8 0" Text="Map list URL:"/>
-            <TextBox Text="{Binding SelectedServer.MapListUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Padding="4 2" VerticalContentAlignment="Center"/>
+            <TextBox Grid.Column="1" Text="{Binding SelectedServer.MapListUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Padding="4 2" VerticalContentAlignment="Center" BorderBrush="Transparent"/>
         </Grid>
 
         <Button Command="{Binding SelectServerContextCommand}" Grid.Row="3" Margin="0 16 0 0" HorizontalAlignment="Center" Content="Start" Padding="24 8"/>

@@ -7,7 +7,7 @@
         xmlns:vm="clr-namespace:zRageMapDownloader.ViewsModels"
         xmlns:converters="clr-namespace:zRageMapDownloader.Converters"
         mc:Ignorable="d"
-        Title="Map Downloader" Height="350" Width="500" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Icon="/zRageMapDownloader;component/download-icon.ico">
+        Title="ZRAGE BRASIL Map Downloader" Height="450" Width="600" MinWidth="300" MinHeight="300" WindowStartupLocation="CenterScreen" Icon="/zRageMapDownloader;component/download-icon.ico">
     <Window.Resources>
         <vm:DownloadMapsViewModel x:Key="DownloadMapsViewModel"/>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>

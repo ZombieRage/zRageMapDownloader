@@ -73,7 +73,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DownloadEventArgs.cs" />
     <Compile Include="Extensions\ServerModelExtensions.cs" />
     <Compile Include="Models\ServerModel.cs" />
     <Compile Include="Models\ServersJson.cs" />
