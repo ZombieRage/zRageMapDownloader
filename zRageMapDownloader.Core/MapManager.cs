@@ -29,52 +29,15 @@ namespace zRageMapDownloader.Core
             Canceled = false;
         }
 
-        public async Task Download(string mapName)
+        public void Download(string mapName)
         {
-            Canceled = false;
-
             var mapFile = _server.BuildMapFile(mapName);
             var remoteFile = $"{Utils.NormalizeUrl(_server.FastdlUrl)}{mapFile}";
             var tempFile = Path.Combine(_tempFolder, mapFile);
 
-            var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Head, remoteFile));
-            var parallelDownloadSuported = response.Headers.AcceptRanges.Contains("bytes");
-            var contentLength = response.Content.Headers.ContentLength ?? 0;
-
-            if (parallelDownloadSuported)
+            using (var wc = new WebClient())
             {
-                const double numberOfParts = 5.0;
-                var tasks = new List<Task>();
-                var partSize = (long)Math.Ceiling(contentLength / numberOfParts);
-
-                File.Create(tempFile).Dispose();
-
-                for (var i = 0; i < numberOfParts; i++)
-                {
-                    var start = i * partSize + Math.Min(1, i);
-                    var end = Math.Min((i + 1) * partSize, contentLength);
-
-                    tasks.Add(
-                        Task.Run(() => DownloadPart(remoteFile, tempFile, start, end))
-                        );
-                }
-
-                await Task.WhenAll(tasks);
-            }
-        }
-
-        private async void DownloadPart(string url, string saveAs, long start, long end)
-        {
-            using (var httpClient = new HttpClient())
-            using (var fileStream = new FileStream(saveAs, FileMode.Open, FileAccess.Write, FileShare.Write))
-            {
-                httpClient.Timeout = TimeSpan.FromMinutes(15);
-
-                var message = new HttpRequestMessage(HttpMethod.Get, url);
-                message.Headers.Add("Range", string.Format("bytes={0}-{1}", start, end));
-
-                fileStream.Position = start;
-                await httpClient.SendAsync(message).Result.Content.CopyToAsync(fileStream);
+                wc.DownloadFile(remoteFile, tempFile);
             }
         }
 
@@ -83,22 +46,33 @@ namespace zRageMapDownloader.Core
             var mapFile = _server.BuildMapFile(mapName);
             var tempFile = Path.Combine(_tempFolder, mapFile);
 
-
-            FileInfo zipFileName = new FileInfo(tempFile);
-            using (FileStream fileToDecompressAsStream = zipFileName.OpenRead())
+            int tries = 0;
+            bool success = false;
+            do
             {
-                string decompressedFileName = Path.Combine(_tempFolder, Path.GetFileName(mapFile)).Replace(".bz2", "");
-                using (FileStream decompressedStream = File.Create(decompressedFileName))
+                try
                 {
-                    try
+                    FileInfo zipFileName = new FileInfo(tempFile);
+                    using (FileStream fileToDecompressAsStream = zipFileName.OpenRead())
                     {
-                        BZip2.Decompress(fileToDecompressAsStream, decompressedStream, true);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
+                        string decompressedFileName = Path.Combine(_tempFolder, Path.GetFileName(mapFile)).Replace(".bz2", "");
+                        using (FileStream decompressedStream = File.Create(decompressedFileName))
+                        {
+                            BZip2.Decompress(fileToDecompressAsStream, decompressedStream, true);
+                            success = true;
+                            break;
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Can't decompress " + mapName);
+                }
+            } while (tries < 5);
+
+            if (!success)
+            {
+                throw new Exception("Can't decompress " + mapName);
             }
         }
 
@@ -121,21 +95,65 @@ namespace zRageMapDownloader.Core
                 }
             }
 
-            try
+            int tries = 0;
+            do
             {
-                File.Move(tempFile, finalFile);
-                return true;
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Can't move " + finalFile);
-                return false;
-            }
+                try
+                {
+                    File.Move(tempFile, finalFile);
+                    return true;
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Can't move " + finalFile);
+                    tries++;
+
+                    Thread.Sleep(1000);
+                }
+            } while (tries < 5);
+
+            return false;
         }
 
         public void Cancel()
         {
             Canceled = true;
+        }
+
+        public void DeleteAllTempFiles()
+        {
+            var di = new DirectoryInfo(_tempFolder);
+            var files = di.EnumerateFiles();
+
+            foreach (var file in files)
+            {
+                TryDeleteFile(file.FullName);
+            }
+
+            // delete the folder if its empty
+            if (!di.GetFiles().Any())
+            {
+                Directory.Delete(_tempFolder);
+            }
+        }
+
+        private void TryDeleteFile(string file)
+        {
+            int tries = 0;
+            do
+            {
+                try
+                {
+                    File.Delete(file);
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("can't delete " + file);
+                    tries++;
+                    Thread.Sleep(1000);
+                }
+            } while (tries < 5);
         }
     }
 }

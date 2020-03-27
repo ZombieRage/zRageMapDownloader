@@ -125,17 +125,13 @@ namespace zRageMapDownloader.ViewsModels
                     {
                         AppendToLog($"Downloading {normalizedName}...");
 
-                        _mm.Download(map).Wait();
-
-                        Thread.Sleep(1000);
+                        _mm.Download(map);
 
                         if (map[0] != '$')
                         {
                             AppendToLog($"Decompressing {normalizedName}...");
                             _mm.Decompress(normalizedName);
                         }
-
-                        Thread.Sleep(1000);
 
                         AppendToLog($"Moving {normalizedName} to maps folder...");
                         if (!_mm.MoveToMapsFolder(normalizedName))
@@ -155,6 +151,8 @@ namespace zRageMapDownloader.ViewsModels
 
             AppendToLog($"Download finished.");
             DownloadInProgress = false;
+
+            _ = Task.Run(() => _mm.DeleteAllTempFiles());
         }
     }
 }
