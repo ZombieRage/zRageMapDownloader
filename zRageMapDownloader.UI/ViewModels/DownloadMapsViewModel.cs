@@ -77,12 +77,13 @@ namespace zRageMapDownloader.ViewsModels
 
         public async void StartDownload()
         {
+            Progress = 0;
             DownloadInProgress = true;
             List<string> maps = null;
 
             try
             {
-                maps = Server.GetMapsToDownload();
+                maps = Server.GetMapsToDownload().Where(x => !string.IsNullOrEmpty(x) || x.Length > 3).ToList();
                 MapsToDownload = maps.Count;
             }
             catch (Exception ex)

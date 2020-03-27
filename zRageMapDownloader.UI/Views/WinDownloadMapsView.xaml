@@ -6,6 +6,8 @@
         xmlns:local="clr-namespace:zRageMapDownloader.Views"
         xmlns:vm="clr-namespace:zRageMapDownloader.ViewsModels"
         xmlns:converters="clr-namespace:zRageMapDownloader.Converters"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:behaviors="clr-namespace:zRageMapDownloader.Behaviors"
         mc:Ignorable="d"
         Title="ZRAGE BRASIL Map Downloader" Height="450" Width="600" MinWidth="300" MinHeight="300" WindowStartupLocation="CenterScreen" Icon="/ZRAGE BRASIL Map Downloader;component/Assets/Images/download-icon.ico">
     <Window.Resources>
@@ -43,7 +45,11 @@
         <Button Visibility="{Binding DownloadInProgress, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverterReversed}}" Command="{Binding StartDownloadCommand}" Grid.Row="1" Margin="0 12" HorizontalAlignment="Right" Padding="8" Content="Download maps"/>
         <Button Visibility="{Binding DownloadInProgress, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" Command="{Binding CancelDownloadCommand}" Grid.Row="1" Margin="0 12" HorizontalAlignment="Right" Padding="8" Content="Cancel Download"/>
 
-        <TextBox Text="{Binding Log, UpdateSourceTrigger=PropertyChanged}" Padding="4" AcceptsReturn="True" IsReadOnly="True" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
+        <TextBox Text="{Binding Log, UpdateSourceTrigger=PropertyChanged}" Padding="4" AcceptsReturn="True" IsReadOnly="True" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <i:Interaction.Behaviors>
+                <behaviors:PutCursorAtEndTextBoxBehavior/>
+            </i:Interaction.Behaviors>
+        </TextBox>
 
         <ProgressBar Value="{Binding Progress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="{Binding MapsToDownload, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Height="32" Margin="0 8 0 0"/>
     </Grid>
