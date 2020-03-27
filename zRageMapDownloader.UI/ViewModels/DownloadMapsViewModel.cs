@@ -128,8 +128,14 @@ namespace zRageMapDownloader.ViewsModels
                         _mm.Download(map).Wait();
 
                         Thread.Sleep(1000);
-                        AppendToLog($"Decompressing {normalizedName}...");
-                        _mm.Decompress(normalizedName);
+
+                        if (map[0] != '$')
+                        {
+                            AppendToLog($"Decompressing {normalizedName}...");
+                            _mm.Decompress(normalizedName);
+                        }
+
+                        Thread.Sleep(1000);
 
                         AppendToLog($"Moving {normalizedName} to maps folder...");
                         if (!_mm.MoveToMapsFolder(normalizedName))

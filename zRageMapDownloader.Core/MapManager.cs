@@ -24,6 +24,7 @@ namespace zRageMapDownloader.Core
             Directory.CreateDirectory(_tempFolder);
 
             _httpClient = new HttpClient();
+            _httpClient.Timeout = TimeSpan.FromMinutes(15);
             _server = server;
             Canceled = false;
         }
@@ -67,6 +68,8 @@ namespace zRageMapDownloader.Core
             using (var httpClient = new HttpClient())
             using (var fileStream = new FileStream(saveAs, FileMode.Open, FileAccess.Write, FileShare.Write))
             {
+                httpClient.Timeout = TimeSpan.FromMinutes(15);
+
                 var message = new HttpRequestMessage(HttpMethod.Get, url);
                 message.Headers.Add("Range", string.Format("bytes={0}-{1}", start, end));
 
@@ -101,9 +104,9 @@ namespace zRageMapDownloader.Core
 
         public bool MoveToMapsFolder(string mapName)
         {
-            var mapFile = _server.BuildMapFile(mapName);
+            var mapFile = _server.BuildMapFile(mapName).Replace(".bz2", "");
             var tempFile = Path.Combine(_tempFolder, mapFile);
-            var finalFile = Path.Combine(_server.GetMapsDirectory(), mapFile.Replace(".bz2", ""));
+            var finalFile = Path.Combine(_server.GetMapsDirectory(), mapFile);
 
             if (File.Exists(finalFile))
             {
