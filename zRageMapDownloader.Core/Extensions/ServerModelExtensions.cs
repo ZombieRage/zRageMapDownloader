@@ -26,6 +26,11 @@ namespace zRageMapDownloader.Core
         {
             bool isCompressed = mapName[0] != '$';
 
+            if (!isCompressed)
+            {
+                mapName = mapName.Remove(0, 1);
+            }
+
             return $"{mapName}.bsp{(isCompressed ? ".bz2" : "")}";
         }
 

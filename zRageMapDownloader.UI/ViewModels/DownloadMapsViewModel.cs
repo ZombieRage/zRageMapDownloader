@@ -99,6 +99,8 @@ namespace zRageMapDownloader.ViewsModels
 
             foreach (var map in maps)
             {
+                var normalizedName = map.Replace("$", "");
+
                 if (_mm.Canceled)
                 {
                     AppendToLog("Download cancelled by the user." + Environment.NewLine);
@@ -108,10 +110,10 @@ namespace zRageMapDownloader.ViewsModels
                     return;
                 }
 
-                var existingFile = Path.Combine(Server.GetMapsDirectory(), map + ".bsp");
+                var existingFile = Path.Combine(Server.GetMapsDirectory(), normalizedName + ".bsp");
                 if (!ReplaceExistingMaps && File.Exists(existingFile))
                 {
-                    AppendToLog($"{map} already exists. Skipping...");
+                    AppendToLog($"{normalizedName} already exists. Skipping...");
                     Progress++;
                     continue;
                 }
@@ -120,16 +122,16 @@ namespace zRageMapDownloader.ViewsModels
                 {
                     await Task.Run(() => 
                     {
-                        AppendToLog($"Downloading {map}...");
+                        AppendToLog($"Downloading {normalizedName}...");
 
                         _mm.Download(map).Wait();
 
                         Thread.Sleep(1000);
-                        AppendToLog($"Decompressing {map}...");
-                        _mm.Decompress(map);
+                        AppendToLog($"Decompressing {normalizedName}...");
+                        _mm.Decompress(normalizedName);
 
-                        AppendToLog($"Moving {map} to maps folder...");
-                        if (!_mm.MoveToMapsFolder(map))
+                        AppendToLog($"Moving {normalizedName} to maps folder...");
+                        if (!_mm.MoveToMapsFolder(normalizedName))
                         {
                             throw new Exception($"Can't move to maps folder");
                         }
@@ -137,8 +139,8 @@ namespace zRageMapDownloader.ViewsModels
                 }
                 catch (Exception ex)
                 {
-                    AppendToLog($"Error while processing {map}: {ex.Message}");
-                    AppendToLog($"Skipping {map}");
+                    AppendToLog($"Error while processing {normalizedName}: {ex.Message}");
+                    AppendToLog($"Skipping {normalizedName}");
                 }
 
                 Progress++;
