@@ -13,7 +13,6 @@ namespace zRageMapDownloader.Core
 {
     public class MapManager
     {
-        private HttpClient _httpClient;
         private string _tempFolder;
         private ServerModel _server;
         public bool Canceled { get; set; }
@@ -23,8 +22,6 @@ namespace zRageMapDownloader.Core
             _tempFolder = Path.GetTempPath() + Guid.NewGuid();
             Directory.CreateDirectory(_tempFolder);
 
-            _httpClient = new HttpClient();
-            _httpClient.Timeout = TimeSpan.FromMinutes(15);
             _server = server;
             Canceled = false;
         }
@@ -128,12 +125,6 @@ namespace zRageMapDownloader.Core
             foreach (var file in files)
             {
                 TryDeleteFile(file.FullName);
-            }
-
-            // delete the folder if its empty
-            if (!di.GetFiles().Any())
-            {
-                Directory.Delete(_tempFolder);
             }
         }
 

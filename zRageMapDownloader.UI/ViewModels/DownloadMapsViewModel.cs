@@ -108,6 +108,8 @@ namespace zRageMapDownloader.ViewsModels
                     Progress = 0;
                     DownloadInProgress = false;
                     Cancelling = false;
+                    _ = Task.Run(() => _mm.DeleteAllTempFiles());
+
                     return;
                 }
 
