@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -9,8 +10,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using zRageMapDownloader.Commands;
 using zRageMapDownloader.Core;
+using zRageMapDownloader.ViewModels;
+using zRageMapDownloader.Views;
 
-namespace zRageMapDownloader.ViewsModels
+namespace zRageMapDownloader.ViewModels
 {
     public class DownloadMapsViewModel : INotifyPropertyChanged
     {
@@ -18,6 +21,7 @@ namespace zRageMapDownloader.ViewsModels
 
         private MapManager _mm;
         public ServerModel Server { get; set; }
+        public ObservableCollection<MapModel> Maps { get; set; }
         public string MapsDirectory { get; set; }
         public bool ReplaceExistingMaps { get; set; }
         public string Log { get; set; }
@@ -26,15 +30,20 @@ namespace zRageMapDownloader.ViewsModels
         public bool DownloadInProgress { get; set; }
         public bool Cancelling { get; set; }
 
+        public string MapsSelectionStatus { get; set; }
+
         public OpenFolderDialogCommand OpenFolderDialogCommand { get; set; }
         public StartDownloadCommand StartDownloadCommand { get; set; }
         public CancelDownloadCommand CancelDownloadCommand { get; set; }
+        public OpenMapsSelectorCommand OpenMapsSelectorCommand { get; set; }
 
         public DownloadMapsViewModel()
         {
             OpenFolderDialogCommand = new OpenFolderDialogCommand(this);
             StartDownloadCommand = new StartDownloadCommand(this);
             CancelDownloadCommand = new CancelDownloadCommand(this);
+            OpenMapsSelectorCommand = new OpenMapsSelectorCommand(this);
+            Maps = new ObservableCollection<MapModel>();
 
             Progress = 0;
             MapsToDownload = 1;
@@ -46,6 +55,18 @@ namespace zRageMapDownloader.ViewsModels
             MapsDirectory = server.GetMapsDirectory();
 
             _mm = new MapManager(Server);
+
+            var listMaps = Server.GetMapsToDownload()
+                    .Select(x => new MapModel(x, Server))
+                    .ToList();
+
+            Maps.Clear();
+            foreach (var map in listMaps)
+            {
+                Maps.Add(map);
+            }
+
+            MapsSelectionStatus = $"{Maps.Count(x => !x.SkipOnDownload)} / {Maps.Count()} maps";
         }
 
         public void SelectMapsFolder()
@@ -70,53 +91,48 @@ namespace zRageMapDownloader.ViewsModels
 
         public void CancelDownload()
         {
-            AppendToLog("Cancelation pending. Waiting for end of the current process..." + Environment.NewLine);
+            AppendToLog("Cancelation pending. Waiting for end of the current process...");
             Cancelling = true;
             _mm.Cancel();
         }
 
-        public async void StartDownload()
+        public void FinishDownloadAction()
         {
             Progress = 0;
-            DownloadInProgress = true;
-            List<string> maps = null;
+            DownloadInProgress = false;
+            AppendToLog($"Download finished.");
+            AppendToLog(Environment.NewLine);
+            _ = Task.Run(() => MapManager.DeleteAllTempFiles());
+        }
 
-            try
-            {
-                maps = Server.GetMapsToDownload().Where(x => !string.IsNullOrEmpty(x) || x.Length > 3).ToList();
-                MapsToDownload = maps.Count;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error when trying to retrieve information from the file {Server.MapListUrl}: {ex.Message}");
-                return;
-            }
+        public async void StartDownload()
+        {
+            DownloadInProgress = true;
+            _mm.Canceled = false;
+
+            // filters the selected maps
+            var maps = Maps.Where(x => !x.SkipOnDownload);
+            MapsToDownload = maps.Count();
 
             if (!maps.Any())
             {
-                MessageBox.Show($"The current map list found at {Server.MapListUrl} has no map");
+                AppendToLog("No map was selected for download.");
                 return;
             }
 
             foreach (var map in maps)
             {
-                var normalizedName = map.Replace("$", "");
-
                 if (_mm.Canceled)
                 {
-                    AppendToLog("Download cancelled by the user." + Environment.NewLine);
-                    Progress = 0;
-                    DownloadInProgress = false;
+                    AppendToLog("Download cancelled by the user.");
                     Cancelling = false;
-                    _ = Task.Run(() => _mm.DeleteAllTempFiles());
-
+                    FinishDownloadAction();
                     return;
                 }
 
-                var existingFile = Path.Combine(Server.GetMapsDirectory(), normalizedName + ".bsp");
-                if (!ReplaceExistingMaps && File.Exists(existingFile))
+                if (!ReplaceExistingMaps && map.ExistsInMapsFolder())
                 {
-                    AppendToLog($"{normalizedName} already exists. Skipping...");
+                    AppendToLog($"{map} already exists. Skipping...");
                     Progress++;
                     continue;
                 }
@@ -125,18 +141,18 @@ namespace zRageMapDownloader.ViewsModels
                 {
                     await Task.Run(() => 
                     {
-                        AppendToLog($"Downloading {normalizedName}...");
+                        AppendToLog($"Downloading {map.DownloadableFileName}...");
 
                         _mm.Download(map);
 
-                        if (map[0] != '$')
+                        if (map.IsCompressed)
                         {
-                            AppendToLog($"Decompressing {normalizedName}...");
-                            _mm.Decompress(normalizedName);
+                            AppendToLog($"Decompressing {map.DownloadableFileName}...");
+                            _mm.Decompress(map);
                         }
 
-                        AppendToLog($"Moving {normalizedName} to maps folder...");
-                        if (!_mm.MoveToMapsFolder(normalizedName))
+                        AppendToLog($"Moving {map.LocalFileName} to maps folder...");
+                        if (!_mm.MoveToMapsFolder(map))
                         {
                             throw new Exception($"Can't move to maps folder");
                         }
@@ -144,17 +160,24 @@ namespace zRageMapDownloader.ViewsModels
                 }
                 catch (Exception ex)
                 {
-                    AppendToLog($"Error while processing {normalizedName}: {ex.Message}");
-                    AppendToLog($"Skipping {normalizedName}");
+                    AppendToLog($"Error while processing {map}: {ex.Message}");
+                    AppendToLog($"Skipping {map}");
                 }
 
                 Progress++;
             }
 
-            AppendToLog($"Download finished.");
-            DownloadInProgress = false;
+            FinishDownloadAction();
+        }
 
-            _ = Task.Run(() => _mm.DeleteAllTempFiles());
+        public void OpenMapsSelector()
+        {
+            var win = new WinMapsSelectorView();
+            var vmMapsSelector = win.FindResource(nameof(MapsSelectorViewModel)) as MapsSelectorViewModel;
+            vmMapsSelector.BindMapsObject(Maps);
+
+            win.ShowDialog();
+            MapsSelectionStatus = $"{Maps.Count(x => !x.SkipOnDownload)} / {Maps.Count()} maps";
         }
     }
 }

@@ -8,7 +8,7 @@ using zRageMapDownloader.ViewModels;
 
 namespace zRageMapDownloader.Commands
 {
-    public class CancelDownloadCommand : ICommand
+    public class OpenMapsSelectorCommand : ICommand
     {
         DownloadMapsViewModel _vm { get; set; }
 
@@ -23,19 +23,19 @@ namespace zRageMapDownloader.Commands
             CommandManager.InvalidateRequerySuggested();
         }
 
-        public CancelDownloadCommand(DownloadMapsViewModel vm)
+        public OpenMapsSelectorCommand(DownloadMapsViewModel vm)
         {
             _vm = vm;
         }
 
         public bool CanExecute(object parameter)
         {
-            return !_vm.Cancelling;
+            return !_vm.DownloadInProgress;
         }
 
         public void Execute(object parameter)
         {
-            _vm.CancelDownload();
+            _vm.OpenMapsSelector();
         }
     }
 }

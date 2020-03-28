@@ -13,35 +13,33 @@ namespace zRageMapDownloader.Core
 {
     public class MapManager
     {
+        public static string MainTempFolder = Path.Combine(Path.GetTempPath(), "zrageTempMaps");
         private string _tempFolder;
         private ServerModel _server;
         public bool Canceled { get; set; }
 
         public MapManager(ServerModel server)
         {
-            _tempFolder = Path.GetTempPath() + Guid.NewGuid();
+            _tempFolder = Path.Combine(MainTempFolder, Guid.NewGuid().ToString().ToUpper());
             Directory.CreateDirectory(_tempFolder);
 
             _server = server;
             Canceled = false;
         }
 
-        public void Download(string mapName)
+        public void Download(MapModel map)
         {
-            var mapFile = _server.BuildMapFile(mapName);
-            var remoteFile = $"{Utils.NormalizeUrl(_server.FastdlUrl)}{mapFile}";
-            var tempFile = Path.Combine(_tempFolder, mapFile);
+            var tempFile = Path.Combine(_tempFolder, map.DownloadableFileName);
 
             using (var wc = new WebClient())
             {
-                wc.DownloadFile(remoteFile, tempFile);
+                wc.DownloadFile(map.RemoteFileName, tempFile);
             }
         }
 
-        public void Decompress(string mapName)
+        public void Decompress(MapModel map)
         {
-            var mapFile = _server.BuildMapFile(mapName);
-            var tempFile = Path.Combine(_tempFolder, mapFile);
+            var tempFile = Path.Combine(_tempFolder, map.DownloadableFileName);
 
             int tries = 0;
             bool success = false;
@@ -52,7 +50,7 @@ namespace zRageMapDownloader.Core
                     FileInfo zipFileName = new FileInfo(tempFile);
                     using (FileStream fileToDecompressAsStream = zipFileName.OpenRead())
                     {
-                        string decompressedFileName = Path.Combine(_tempFolder, Path.GetFileName(mapFile)).Replace(".bz2", "");
+                        string decompressedFileName = Path.Combine(_tempFolder, map.LocalFileName);
                         using (FileStream decompressedStream = File.Create(decompressedFileName))
                         {
                             BZip2.Decompress(fileToDecompressAsStream, decompressedStream, true);
@@ -63,21 +61,20 @@ namespace zRageMapDownloader.Core
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Can't decompress " + mapName);
+                    Console.WriteLine("Can't decompress " + map);
                 }
             } while (tries < 5);
 
             if (!success)
             {
-                throw new Exception("Can't decompress " + mapName);
+                throw new Exception("Can't decompress " + map);
             }
         }
 
-        public bool MoveToMapsFolder(string mapName)
+        public bool MoveToMapsFolder(MapModel map)
         {
-            var mapFile = _server.BuildMapFile(mapName).Replace(".bz2", "");
-            var tempFile = Path.Combine(_tempFolder, mapFile);
-            var finalFile = Path.Combine(_server.GetMapsDirectory(), mapFile);
+            var tempFile = Path.Combine(_tempFolder, map.LocalFileName);
+            var finalFile = Path.Combine(_server.GetMapsDirectory(), map.LocalFileName);
 
             if (File.Exists(finalFile))
             {
@@ -117,10 +114,10 @@ namespace zRageMapDownloader.Core
             Canceled = true;
         }
 
-        public void DeleteAllTempFiles()
+        public static void DeleteAllTempFiles()
         {
-            var di = new DirectoryInfo(_tempFolder);
-            var files = di.EnumerateFiles();
+            var di = new DirectoryInfo(MainTempFolder);
+            var files = di.EnumerateFiles("*", SearchOption.AllDirectories);
 
             foreach (var file in files)
             {
@@ -128,7 +125,7 @@ namespace zRageMapDownloader.Core
             }
         }
 
-        private void TryDeleteFile(string file)
+        private static void TryDeleteFile(string file)
         {
             int tries = 0;
             do

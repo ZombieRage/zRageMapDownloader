@@ -113,17 +113,29 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Behaviors\PutCursorAtEndTextBoxBehavior.cs" />
+    <Compile Include="Behaviors\TextBoxBehaviour.cs" />
     <Compile Include="Commands\CancelDownloadCommand.cs" />
     <Compile Include="Commands\OpenFolderDialogCommand.cs" />
+    <Compile Include="Commands\OpenMapsSelectorCommand.cs" />
+    <Compile Include="Commands\SearchStringChangedCommand.cs" />
+    <Compile Include="Commands\SelectAllMapsCommand.cs" />
     <Compile Include="Commands\SelectServerContextCommand.cs" />
     <Compile Include="Commands\StartDownloadCommand.cs" />
+    <Compile Include="Commands\UnselectAllMapsCommand.cs" />
     <Compile Include="Converters\BoolReversedConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverterReversed.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\IsCompressedToTextConverter.cs" />
+    <Compile Include="Converters\IsCompressedToFontWeightConverter.cs" />
+    <Compile Include="Utils\EventBehaviourFactory.cs" />
     <Compile Include="ViewModels\DownloadMapsViewModel.cs" />
+    <Compile Include="ViewModels\MapsSelectorViewModel.cs" />
     <Compile Include="ViewModels\ServerSelectionViewModel.cs" />
     <Compile Include="Views\WinDownloadMapsView.xaml.cs">
       <DependentUpon>WinDownloadMapsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WinMapsSelectorView.xaml.cs">
+      <DependentUpon>WinMapsSelectorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WinServerSelectionView.xaml.cs">
       <DependentUpon>WinServerSelectionView.xaml</DependentUpon>
@@ -162,6 +174,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\WinDownloadMapsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WinMapsSelectorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

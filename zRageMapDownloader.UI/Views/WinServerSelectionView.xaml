@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:zRageMapDownloader.Views"
-        xmlns:vm="clr-namespace:zRageMapDownloader.ViewsModels"
+        xmlns:vm="clr-namespace:zRageMapDownloader.ViewModels"
         mc:Ignorable="d"
         Title="ZRAGE BRASIL Map Downloader" Height="450" Width="600" MinWidth="500" MinHeight="300" Background="#eee" WindowStartupLocation="CenterScreen" Icon="/ZRAGE BRASIL Map Downloader;component/Assets/Images/download-icon.ico">
     <Window.Resources>

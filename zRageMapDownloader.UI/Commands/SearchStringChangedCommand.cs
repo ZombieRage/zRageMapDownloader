@@ -8,9 +8,9 @@ using zRageMapDownloader.ViewModels;
 
 namespace zRageMapDownloader.Commands
 {
-    public class CancelDownloadCommand : ICommand
+    public class SearchStringChangedCommand : ICommand
     {
-        DownloadMapsViewModel _vm { get; set; }
+        MapsSelectorViewModel _vm { get; set; }
 
         public event EventHandler CanExecuteChanged
         {
@@ -23,19 +23,19 @@ namespace zRageMapDownloader.Commands
             CommandManager.InvalidateRequerySuggested();
         }
 
-        public CancelDownloadCommand(DownloadMapsViewModel vm)
+        public SearchStringChangedCommand(MapsSelectorViewModel vm)
         {
             _vm = vm;
         }
 
         public bool CanExecute(object parameter)
         {
-            return !_vm.Cancelling;
+            return !string.IsNullOrEmpty(_vm.SearchString) || !string.IsNullOrWhiteSpace(_vm.SearchString);
         }
 
         public void Execute(object parameter)
         {
-            _vm.CancelDownload();
+            _vm.FilterMaps();
         }
     }
 }

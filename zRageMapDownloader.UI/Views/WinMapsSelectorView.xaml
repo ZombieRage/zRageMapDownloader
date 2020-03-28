@@ -1,0 +1,74 @@
+﻿<Window x:Class="zRageMapDownloader.Views.WinMapsSelectorView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:zRageMapDownloader.Views"
+        xmlns:vm="clr-namespace:zRageMapDownloader.ViewModels"
+        xmlns:converters="clr-namespace:zRageMapDownloader.Converters"
+        xmlns:behaviors="clr-namespace:zRageMapDownloader.Behaviors"
+        mc:Ignorable="d"
+        Title="Select the maps you want to download" Height="450" Width="700">
+    <Window.Resources>
+        <vm:MapsSelectorViewModel x:Key="MapsSelectorViewModel"/>
+        <converters:BoolReversedConverter x:Key="BoolReversedConverter"/>
+        <converters:IsCompressedToTextConverter x:Key="IsCompressedToTextConverter"/>
+        <converters:IsCompressedToFontWeightConverter x:Key="IsCompressedToFontWeightConverter"/>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Window.Resources>
+    <Grid Margin="8" DataContext="{StaticResource MapsSelectorViewModel}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Map search" Margin="0 0 0 2"/>
+            <TextBox Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" behaviors:TextBoxBehavior.TextChangedCommand="{Binding SearchStringChangedCommand}" Grid.Row="1" Padding="0 2"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="0 8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Map list" Margin="0 2"/>
+            <ScrollViewer Grid.Row="1">
+                <ItemsControl ItemsSource="{Binding Maps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#ccc" BorderThickness="1" Padding="4">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="0 4" BorderThickness="0 0 0 1" BorderBrush="#ddd" Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <CheckBox Grid.Column="0" IsChecked="{Binding SkipOnDownload, Converter={StaticResource BoolReversedConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" FontWeight="{Binding IsCompressed, Converter={StaticResource IsCompressedToFontWeightConverter}}" Padding="4 0"/>
+                                    <TextBlock Grid.Column="2" FontWeight="Bold" Text="{Binding IsCompressed, Converter={StaticResource IsCompressedToTextConverter}, UpdateSourceTrigger=PropertyChanged}" Foreground="Red" Padding="4 0"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding SelectAllMapsCommand}" Content="Select all" HorizontalAlignment="Left" Height="24" Padding="8 0" Margin="0 0 8 0"/>
+                <Button Command="{Binding UnselectAllMapsCommand}" Content="Unselect all" HorizontalAlignment="Left" Height="24" Padding="8 0"/>
+            </StackPanel>
+            <Button Content="OK" HorizontalAlignment="Right" Padding="32 8" Click="Button_Click"/>
+        </Grid>
+    </Grid>
+</Window>

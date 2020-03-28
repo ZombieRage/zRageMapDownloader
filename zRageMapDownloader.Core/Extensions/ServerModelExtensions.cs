@@ -17,21 +17,14 @@ namespace zRageMapDownloader.Core
             var csvMaps = client.DownloadString(server.MapListUrl);
             client.Dispose();
 
-            var list = csvMaps.Replace("\r", "").Replace("\n", "").Split(',').ToList();
+            var list = csvMaps
+                .Replace("\r", "")
+                .Replace("\n", "")
+                .Split(',')
+                .Where(x => !string.IsNullOrEmpty(x) || x.Length > 3)
+                .ToList();
 
             return list;
-        }
-
-        public static string BuildMapFile(this ServerModel server, string mapName)
-        {
-            bool isCompressed = mapName[0] != '$';
-
-            if (!isCompressed)
-            {
-                mapName = mapName.Remove(0, 1);
-            }
-
-            return $"{mapName}.bsp{(isCompressed ? ".bz2" : "")}";
         }
 
         public static string GetMapsDirectory(this ServerModel server)

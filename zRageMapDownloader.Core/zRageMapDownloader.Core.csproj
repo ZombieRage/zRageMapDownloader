@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\ServerModelExtensions.cs" />
+    <Compile Include="Models\MapModel.cs" />
     <Compile Include="Models\ServerModel.cs" />
     <Compile Include="Models\ServersJson.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

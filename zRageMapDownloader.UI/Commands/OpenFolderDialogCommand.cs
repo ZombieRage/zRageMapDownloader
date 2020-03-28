@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using zRageMapDownloader.ViewsModels;
+using zRageMapDownloader.ViewModels;
 
 namespace zRageMapDownloader.Commands
 {

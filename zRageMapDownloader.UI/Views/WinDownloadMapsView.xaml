@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:zRageMapDownloader.Views"
-        xmlns:vm="clr-namespace:zRageMapDownloader.ViewsModels"
+        xmlns:vm="clr-namespace:zRageMapDownloader.ViewModels"
         xmlns:converters="clr-namespace:zRageMapDownloader.Converters"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:behaviors="clr-namespace:zRageMapDownloader.Behaviors"
@@ -42,8 +42,13 @@
         </Grid>
 
         <CheckBox IsEnabled="{Binding DownloadInProgress, Converter={StaticResource BoolReversedConverter}, UpdateSourceTrigger=PropertyChanged}" IsChecked="{Binding ReplaceExistingMaps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Replace any existing map"/>
-        <Button Visibility="{Binding DownloadInProgress, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverterReversed}}" Command="{Binding StartDownloadCommand}" Grid.Row="1" Margin="0 12" HorizontalAlignment="Right" Padding="8" Content="Download maps"/>
-        <Button Visibility="{Binding DownloadInProgress, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" Command="{Binding CancelDownloadCommand}" Grid.Row="1" Margin="0 12" HorizontalAlignment="Right" Padding="8" Content="Cancel Download"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Command="{Binding OpenMapsSelectorCommand}" Grid.Row="1" Margin="8 12" HorizontalAlignment="Right" Padding="8" Content="Select maps"/>
+            <TextBlock Text="{Binding MapsSelectionStatus, UpdateSourceTrigger=PropertyChanged}" Margin="0 0 16 0" VerticalAlignment="Center"/>
+            <Button Visibility="{Binding DownloadInProgress, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverterReversed}}" Command="{Binding StartDownloadCommand}" Margin="0 12" HorizontalAlignment="Right" Padding="8" Content="Download maps"/>
+            <Button Visibility="{Binding DownloadInProgress, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" Command="{Binding CancelDownloadCommand}" Margin="0 12" HorizontalAlignment="Right" Padding="8" Content="Cancel Download"/>
+        </StackPanel>
 
         <TextBox Text="{Binding Log, UpdateSourceTrigger=PropertyChanged}" Padding="4" AcceptsReturn="True" IsReadOnly="True" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <i:Interaction.Behaviors>
@@ -51,6 +56,6 @@
             </i:Interaction.Behaviors>
         </TextBox>
 
-        <ProgressBar Value="{Binding Progress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="{Binding MapsToDownload, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Height="32" Margin="0 8 0 0"/>
+        <ProgressBar Value="{Binding Progress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="{Binding MapsToDownload, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding DownloadInProgress, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" Grid.Row="3" Height="32" Margin="0 8 0 0"/>
     </Grid>
 </Window>

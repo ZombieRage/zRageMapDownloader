@@ -11,7 +11,7 @@ using zRageMapDownloader.Commands;
 using zRageMapDownloader.Core;
 using zRageMapDownloader.Views;
 
-namespace zRageMapDownloader.ViewsModels
+namespace zRageMapDownloader.ViewModels
 {
     public class ServerSelectionViewModel
     {
@@ -30,11 +30,10 @@ namespace zRageMapDownloader.ViewsModels
 
         public void PopulateAvaliableServers()
         {
-            var serversContextRemoteFile = Utils.GetServersContextRemoteFile();
-
             try
             {
                 var client = new WebClient();
+                var serversContextRemoteFile = zRageMapDownloader.Core.Utils.GetServersContextRemoteFile();
                 var jsonContent = client.DownloadString(serversContextRemoteFile);
                 client.Dispose();
 
