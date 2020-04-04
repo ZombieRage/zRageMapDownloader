@@ -114,6 +114,7 @@
     </Compile>
     <Compile Include="Behaviors\PutCursorAtEndTextBoxBehavior.cs" />
     <Compile Include="Behaviors\TextBoxBehaviour.cs" />
+    <Compile Include="Commands\OpenAboutWindowCommand.cs" />
     <Compile Include="Commands\CancelDownloadCommand.cs" />
     <Compile Include="Commands\OpenFolderDialogCommand.cs" />
     <Compile Include="Commands\OpenMapsSelectorCommand.cs" />
@@ -131,6 +132,9 @@
     <Compile Include="ViewModels\DownloadMapsViewModel.cs" />
     <Compile Include="ViewModels\MapsSelectorViewModel.cs" />
     <Compile Include="ViewModels\ServerSelectionViewModel.cs" />
+    <Compile Include="Views\WinAboutView.xaml.cs">
+      <DependentUpon>WinAboutView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\WinDownloadMapsView.xaml.cs">
       <DependentUpon>WinDownloadMapsView.xaml</DependentUpon>
     </Compile>
@@ -173,6 +177,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\WinAboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\WinDownloadMapsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -200,6 +208,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Images\download-icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Images\zrage_logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.6.1.1\build\Fody.targets" Condition="Exists('..\packages\Fody.6.1.1\build\Fody.targets')" />

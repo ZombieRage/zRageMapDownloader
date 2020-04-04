@@ -19,11 +19,13 @@ namespace zRageMapDownloader.ViewModels
         public ServerModel SelectedServer { get; set; }
 
         public SelectServerContextCommand SelectServerContextCommand { get; set; }
+        public OpenAboutWindowCommand OpenAboutWindowCommand { get; set; }
 
         public ServerSelectionViewModel()
         {
             AvaliableServers = new ObservableCollection<ServerModel>();
             SelectServerContextCommand = new SelectServerContextCommand(this);
+            OpenAboutWindowCommand = new OpenAboutWindowCommand();
 
             PopulateAvaliableServers();
         }

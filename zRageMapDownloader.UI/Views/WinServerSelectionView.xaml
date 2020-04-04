@@ -10,44 +10,49 @@
     <Window.Resources>
         <vm:ServerSelectionViewModel x:Key="ServerSelectionViewModel"/>
     </Window.Resources>
-    <Grid Margin="8" DataContext="{StaticResource ServerSelectionViewModel}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-
-        <Grid Grid.Row="0" Margin="0 0 0 8">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Padding="2" Background="#FFCDCDCD">
+            <MenuItem Header="About" Command="{Binding OpenAboutWindowCommand, Source={StaticResource ServerSelectionViewModel}}"/>
+        </Menu>
+        <Grid Margin="8" DataContext="{StaticResource ServerSelectionViewModel}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Margin="0 0 0 2" Grid.Row="0" Text="Avaliable servers"/>
-            <ListBox Grid.Row="1" ItemsSource="{Binding AvaliableServers, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedServer, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"/>
+            <Grid Grid.Row="0" Margin="0 0 0 8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Margin="0 0 0 2" Grid.Row="0" Text="Avaliable servers"/>
+                <ListBox Grid.Row="1" ItemsSource="{Binding AvaliableServers, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedServer, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"/>
+            </Grid>
+
+            <Grid Grid.Row="1" Margin="0 8 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="5*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock VerticalAlignment="Center" Grid.Column="0" Margin="0 0 8 0" Text="Fastdl URL:"/>
+                <TextBox IsReadOnly="True" Text="{Binding SelectedServer.FastdlUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Padding="4 2" VerticalContentAlignment="Center"/>
+            </Grid>
+
+            <Grid Grid.Row="2" Margin="0 8 0 0" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="5*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock VerticalAlignment="Center" Grid.Column="0" Margin="0 0 8 0" Text="Map list URL:"/>
+                <TextBox Grid.Column="1" Text="{Binding SelectedServer.MapListUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Padding="4 2" VerticalContentAlignment="Center" BorderBrush="Transparent"/>
+            </Grid>
+
+            <Button Command="{Binding SelectServerContextCommand}" Grid.Row="3" Margin="0 16 0 0" HorizontalAlignment="Right" Content="Start" Padding="24 8"/>
         </Grid>
-
-        <Grid Grid.Row="1" Margin="0 8 0 0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="5*"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock VerticalAlignment="Center" Grid.Column="0" Margin="0 0 8 0" Text="Fastdl URL:"/>
-            <TextBox IsReadOnly="True" Text="{Binding SelectedServer.FastdlUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Padding="4 2" VerticalContentAlignment="Center"/>
-        </Grid>
-
-        <Grid Grid.Row="2" Margin="0 8 0 0" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="5*"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock VerticalAlignment="Center" Grid.Column="0" Margin="0 0 8 0" Text="Map list URL:"/>
-            <TextBox Grid.Column="1" Text="{Binding SelectedServer.MapListUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Padding="4 2" VerticalContentAlignment="Center" BorderBrush="Transparent"/>
-        </Grid>
-
-        <Button Command="{Binding SelectServerContextCommand}" Grid.Row="3" Margin="0 16 0 0" HorizontalAlignment="Right" Content="Start" Padding="24 8"/>
-    </Grid>
+    </DockPanel>
 </Window>

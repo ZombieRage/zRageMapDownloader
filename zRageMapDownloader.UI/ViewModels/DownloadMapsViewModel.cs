@@ -36,6 +36,7 @@ namespace zRageMapDownloader.ViewModels
         public StartDownloadCommand StartDownloadCommand { get; set; }
         public CancelDownloadCommand CancelDownloadCommand { get; set; }
         public OpenMapsSelectorCommand OpenMapsSelectorCommand { get; set; }
+        public OpenAboutWindowCommand OpenAboutWindowCommand { get; set; }
 
         public DownloadMapsViewModel()
         {
@@ -43,6 +44,7 @@ namespace zRageMapDownloader.ViewModels
             StartDownloadCommand = new StartDownloadCommand(this);
             CancelDownloadCommand = new CancelDownloadCommand(this);
             OpenMapsSelectorCommand = new OpenMapsSelectorCommand(this);
+            OpenAboutWindowCommand = new OpenAboutWindowCommand();
             Maps = new ObservableCollection<MapModel>();
 
             Progress = 0;

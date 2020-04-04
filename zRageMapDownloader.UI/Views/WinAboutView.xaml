@@ -1,0 +1,79 @@
+﻿<Window x:Class="zRageMapDownloader.Views.WinAboutView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:zRageMapDownloader.Views"
+        mc:Ignorable="d"
+        Title="About" Height="300" Width="620" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+    <Grid Margin="8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Rectangle HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.RowSpan="2" Width="1" Fill="#FFB8B8B8"/>
+
+            <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="/ZRAGE BRASIL Map Downloader;component/Assets/Images/zrage_logo.png"/>
+            <StackPanel Grid.Row="1">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="12" FontWeight="Medium" Text="ZRAGE BRASIL Map Downloader" Margin="8 8"/>
+                <TextBlock HorizontalAlignment="Center" Text="Created by FANZACK"/>
+                <TextBlock HorizontalAlignment="Center" Foreground="Blue" Cursor="Hand">
+                    <Hyperlink NavigateUri="https://github.com/danielhidalgojunior/zRageMapDownloader" RequestNavigate="Hyperlink_RequestNavigate">
+                        (Github Page)
+                    </Hyperlink>        
+                </TextBlock>
+                <TextBlock HorizontalAlignment="Center" Foreground="Blue" Cursor="Hand">
+                    <Hyperlink NavigateUri="https://steamcommunity.com/id/fanzack/" RequestNavigate="Hyperlink_RequestNavigate">
+                        (Steam profile)
+                    </Hyperlink>
+                </TextBlock>
+            </StackPanel>
+
+            <TextBlock x:Name="txtVersion" Grid.Row="1" Text="2.2" FontWeight="Bold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="#FF707070"/>
+        </Grid>
+
+        <Grid Grid.Column="1" Margin="8 0 0 0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock FontSize="16" FontWeight="Medium" Text="More information:" Margin="0 0 0 8"/>
+            <StackPanel Grid.Row="1">
+                <StackPanel Orientation="Horizontal" Margin="0 0 0 2">
+                    <TextBlock Text="Website:" FontWeight="Medium" Margin="0 0 4 0"/>
+                    <TextBlock HorizontalAlignment="Center" Cursor="Hand" TextDecorations="Underline">
+                    <Hyperlink NavigateUri="https://zrage.com.br" RequestNavigate="Hyperlink_RequestNavigate">
+                        https://zrage.com.br
+                    </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" Margin="0 0 0 2">
+                    <TextBlock Text="Discord:" FontWeight="Medium" Margin="0 0 4 0"/>
+                    <TextBlock HorizontalAlignment="Center" Cursor="Hand" TextDecorations="Underline">
+                    <Hyperlink NavigateUri="https://discord.zrage.com.br" RequestNavigate="Hyperlink_RequestNavigate">
+                        https://discord.zrage.com.br
+                    </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0 0 0 2">
+                    <TextBlock Text="Steam Group:" FontWeight="Medium" Margin="0 0 4 0"/>
+                    <TextBlock HorizontalAlignment="Center" Cursor="Hand" TextDecorations="Underline">
+                    <Hyperlink NavigateUri="https://steamcommunity.com/groups/ZombieRageServer" RequestNavigate="Hyperlink_RequestNavigate">
+                        https://steamcommunity.com/groups/ZombieRageServer
+                    </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

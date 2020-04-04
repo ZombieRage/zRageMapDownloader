@@ -16,46 +16,51 @@
         <converters:BoolToVisibilityConverterReversed x:Key="BoolToVisibilityConverterReversed"/>
         <converters:BoolReversedConverter x:Key="BoolReversedConverter"/>
     </Window.Resources>
-    <Grid Margin="8" DataContext="{StaticResource DownloadMapsViewModel}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Padding="2" Background="#FFCDCDCD">
+            <MenuItem Header="About" Command="{Binding OpenAboutWindowCommand, Source={StaticResource DownloadMapsViewModel}}"/>
+        </Menu>
+        <Grid Margin="8" DataContext="{StaticResource DownloadMapsViewModel}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
 
-            <TextBlock Text="Maps directory" Margin="0 0 0 2" Grid.Row="0"/>
-            <Grid Grid.Row="1" IsEnabled="{Binding DownloadInProgress, Converter={StaticResource BoolReversedConverter}, UpdateSourceTrigger=PropertyChanged}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
+                <TextBlock Text="Maps directory" Margin="0 0 0 2" Grid.Row="0"/>
+                <Grid Grid.Row="1" IsEnabled="{Binding DownloadInProgress, Converter={StaticResource BoolReversedConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <TextBox Text="{Binding MapsDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="4 2" Grid.Column="0" VerticalContentAlignment="Center"/>
-                <Button Command="{Binding OpenFolderDialogCommand}" Content="..." Grid.Column="1" Padding="8 2" Margin="4 0 0 0"/>
+                    <TextBox Text="{Binding MapsDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="4 2" Grid.Column="0" VerticalContentAlignment="Center"/>
+                    <Button Command="{Binding OpenFolderDialogCommand}" Content="..." Grid.Column="1" Padding="8 2" Margin="4 0 0 0"/>
+                </Grid>
             </Grid>
+
+            <CheckBox IsEnabled="{Binding DownloadInProgress, Converter={StaticResource BoolReversedConverter}, UpdateSourceTrigger=PropertyChanged}" IsChecked="{Binding ReplaceExistingMaps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Replace any existing map"/>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Command="{Binding OpenMapsSelectorCommand}" Grid.Row="1" Margin="8 12" HorizontalAlignment="Right" Padding="8" Content="Select maps"/>
+                <TextBlock Text="{Binding MapsSelectionStatus, UpdateSourceTrigger=PropertyChanged}" Margin="0 0 16 0" VerticalAlignment="Center"/>
+                <Button Visibility="{Binding DownloadInProgress, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverterReversed}}" Command="{Binding StartDownloadCommand}" Margin="0 12" HorizontalAlignment="Right" Padding="8" Content="Download maps"/>
+                <Button Visibility="{Binding DownloadInProgress, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" Command="{Binding CancelDownloadCommand}" Margin="0 12" HorizontalAlignment="Right" Padding="8" Content="Cancel Download"/>
+            </StackPanel>
+
+            <TextBox Text="{Binding Log, UpdateSourceTrigger=PropertyChanged}" Padding="4" AcceptsReturn="True" IsReadOnly="True" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <i:Interaction.Behaviors>
+                    <behaviors:PutCursorAtEndTextBoxBehavior/>
+                </i:Interaction.Behaviors>
+            </TextBox>
+
+            <ProgressBar Value="{Binding Progress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="{Binding MapsToDownload, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding DownloadInProgress, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" Grid.Row="3" Height="32" Margin="0 8 0 0"/>
         </Grid>
-
-        <CheckBox IsEnabled="{Binding DownloadInProgress, Converter={StaticResource BoolReversedConverter}, UpdateSourceTrigger=PropertyChanged}" IsChecked="{Binding ReplaceExistingMaps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Replace any existing map"/>
-
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Command="{Binding OpenMapsSelectorCommand}" Grid.Row="1" Margin="8 12" HorizontalAlignment="Right" Padding="8" Content="Select maps"/>
-            <TextBlock Text="{Binding MapsSelectionStatus, UpdateSourceTrigger=PropertyChanged}" Margin="0 0 16 0" VerticalAlignment="Center"/>
-            <Button Visibility="{Binding DownloadInProgress, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverterReversed}}" Command="{Binding StartDownloadCommand}" Margin="0 12" HorizontalAlignment="Right" Padding="8" Content="Download maps"/>
-            <Button Visibility="{Binding DownloadInProgress, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" Command="{Binding CancelDownloadCommand}" Margin="0 12" HorizontalAlignment="Right" Padding="8" Content="Cancel Download"/>
-        </StackPanel>
-
-        <TextBox Text="{Binding Log, UpdateSourceTrigger=PropertyChanged}" Padding="4" AcceptsReturn="True" IsReadOnly="True" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <i:Interaction.Behaviors>
-                <behaviors:PutCursorAtEndTextBoxBehavior/>
-            </i:Interaction.Behaviors>
-        </TextBox>
-
-        <ProgressBar Value="{Binding Progress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="{Binding MapsToDownload, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding DownloadInProgress, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" Grid.Row="3" Height="32" Margin="0 8 0 0"/>
-    </Grid>
+    </DockPanel>
 </Window>
