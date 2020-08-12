@@ -1,6 +1,7 @@
 ﻿using ICSharpCode.SharpZipLib.BZip2;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -11,11 +12,15 @@ using System.Threading.Tasks;
 
 namespace zRageMapDownloader.Core
 {
-    public class MapManager
+    public class MapManager : INotifyPropertyChanged
     {
-        public static string MainTempFolder = Path.Combine(Path.GetTempPath(), "zrageTempMaps");
-        private string _tempFolder;
-        private ServerModel _server;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public static readonly string MainTempFolder = Path.Combine(Path.GetTempPath(), "zrageTempMaps");
+        private readonly string _tempFolder;
+        public string MapsDirectory { get; set; }
+        private readonly ServerModel _server;
+
         public bool Canceled { get; set; }
 
         public MapManager(ServerModel server)
@@ -74,7 +79,7 @@ namespace zRageMapDownloader.Core
         public bool MoveToMapsFolder(MapModel map)
         {
             var tempFile = Path.Combine(_tempFolder, map.LocalFileName);
-            var finalFile = Path.Combine(_server.GetMapsDirectory(), map.LocalFileName);
+            var finalFile = Path.Combine(MapsDirectory ?? _server.GetMapsDirectory(), map.LocalFileName);
 
             if (File.Exists(finalFile))
             {

@@ -19,10 +19,9 @@ namespace zRageMapDownloader.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private MapManager _mm;
+        public MapManager MapManager { get; set; }
         public ServerModel Server { get; set; }
         public ObservableCollection<MapModel> Maps { get; set; }
-        public string MapsDirectory { get; set; }
         public bool ReplaceExistingMaps { get; set; }
         public string Log { get; set; }
         public int Progress { get; set; }
@@ -49,14 +48,14 @@ namespace zRageMapDownloader.ViewModels
 
             Progress = 0;
             MapsToDownload = 1;
+            MapsSelectionStatus = "30/30";
         }
 
         public void BindServerObject(ServerModel server)
         {
             Server = server;
-            MapsDirectory = server.GetMapsDirectory();
-
-            _mm = new MapManager(Server);
+            MapManager = new MapManager(Server);
+            MapManager.MapsDirectory = server.GetMapsDirectory();
 
             var listMaps = Server.GetMapsToDownload()
                     .Select(x => new MapModel(x, Server))
@@ -82,7 +81,7 @@ namespace zRageMapDownloader.ViewModels
                     return;
                 }
 
-                MapsDirectory = dialog.SelectedPath;
+                MapManager.MapsDirectory = dialog.SelectedPath;
             }
         }
 
@@ -95,7 +94,7 @@ namespace zRageMapDownloader.ViewModels
         {
             AppendToLog("Cancelation pending. Waiting for end of the current process...");
             Cancelling = true;
-            _mm.Cancel();
+            MapManager.Cancel();
         }
 
         public void FinishDownloadAction()
@@ -110,7 +109,7 @@ namespace zRageMapDownloader.ViewModels
         public async void StartDownload()
         {
             DownloadInProgress = true;
-            _mm.Canceled = false;
+            MapManager.Canceled = false;
 
             // filters the selected maps
             var maps = Maps.Where(x => !x.SkipOnDownload);
@@ -124,7 +123,7 @@ namespace zRageMapDownloader.ViewModels
 
             foreach (var map in maps)
             {
-                if (_mm.Canceled)
+                if (MapManager.Canceled)
                 {
                     AppendToLog("Download cancelled by the user.");
                     Cancelling = false;
@@ -145,16 +144,16 @@ namespace zRageMapDownloader.ViewModels
                     {
                         AppendToLog($"Downloading {map.DownloadableFileName}...");
 
-                        _mm.Download(map);
+                        MapManager.Download(map);
 
                         if (map.IsCompressed)
                         {
                             AppendToLog($"Decompressing {map.DownloadableFileName}...");
-                            _mm.Decompress(map);
+                            MapManager.Decompress(map);
                         }
 
                         AppendToLog($"Moving {map.LocalFileName} to maps folder...");
-                        if (!_mm.MoveToMapsFolder(map))
+                        if (!MapManager.MoveToMapsFolder(map))
                         {
                             throw new Exception($"Can't move to maps folder");
                         }

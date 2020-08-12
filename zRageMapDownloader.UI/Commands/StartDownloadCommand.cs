@@ -31,7 +31,7 @@ namespace zRageMapDownloader.Commands
 
         public bool CanExecute(object parameter)
         {
-            return !string.IsNullOrEmpty(_vm.MapsDirectory) && Directory.Exists(_vm.MapsDirectory);
+            return !string.IsNullOrEmpty(_vm.MapManager?.MapsDirectory) && Directory.Exists(_vm.MapManager?.MapsDirectory);
         }
 
         public void Execute(object parameter)

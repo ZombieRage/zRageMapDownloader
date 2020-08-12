@@ -40,7 +40,7 @@
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Text="{Binding MapsDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="4 2" Grid.Column="0" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding MapManager.MapsDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="4 2" Grid.Column="0" VerticalContentAlignment="Center"/>
                     <Button Command="{Binding OpenFolderDialogCommand}" Content="..." Grid.Column="1" Padding="8 2" Margin="4 0 0 0"/>
                 </Grid>
             </Grid>
