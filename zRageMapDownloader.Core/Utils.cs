@@ -11,10 +11,11 @@ namespace zRageMapDownloader.Core
     public static class Utils
     {
         private static readonly string _defaultRegistryKey = "ServersContextRemoteFile";
-        public static readonly string DefaultServersContextRemoteFile = "http://dbi.zrage.com.br/servers.json";
+        public static readonly string DefaultServersContextRemoteFile = "https://fastdlv2.zrage.xyz/file/zragebr/servers.json";
         public static string GetServersContextRemoteFile()
         {
-            RegistryKey reg = Registry.CurrentUser.CreateSubKey(@"Software\ZombieRageBrazil\MapDownloader", RegistryKeyPermissionCheck.ReadWriteSubTree);
+            return DefaultServersContextRemoteFile;
+            /*RegistryKey reg = Registry.CurrentUser.CreateSubKey(@"Software\ZombieRageBrazil\MapDownloader", RegistryKeyPermissionCheck.ReadWriteSubTree);
 
             // get and save the default server context remote file in case of non existent ServersContextRemoteFile registry 
             var remoteFile = reg.GetValue(_defaultRegistryKey);
@@ -30,7 +31,7 @@ namespace zRageMapDownloader.Core
                 }
             }
 
-            return remoteFile as string;
+            return remoteFile as string; */
         }
 
         public static string NormalizeUrl(string url)
