@@ -11,7 +11,7 @@ namespace zRageMapDownloader.Core
     public static class Utils
     {
         private static readonly string _defaultRegistryKey = "ServersContextRemoteFile";
-        public static readonly string DefaultServersContextRemoteFile = "https://fastdlv2.zrage.xyz/file/zragebr/servers.json";
+        public static readonly string DefaultServersContextRemoteFile = "https://raw.githubusercontent.com/quasemago/zrageservers/master/MapDownloaderApp/servers.json";
         public static string GetServersContextRemoteFile()
         {
             return DefaultServersContextRemoteFile;

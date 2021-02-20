@@ -34,8 +34,9 @@ namespace zRageMapDownloader.ViewModels
         {
             try
             {
-                var client = new WebClient();
                 var serversContextRemoteFile = zRageMapDownloader.Core.Utils.GetServersContextRemoteFile();
+
+                var client = new WebClient();
                 var jsonContent = client.DownloadString(serversContextRemoteFile);
                 client.Dispose();
 
