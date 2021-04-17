@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zRageMapDownloader.UI", "zR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zRageMapDownloader.Core", "zRageMapDownloader.Core\zRageMapDownloader.Core.csproj", "{8DA0FA50-BF7F-4149-82D1-E6E0DCA430A6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zRageMapDownloader.Updater", "zRageMapDownloader.Updater\zRageMapDownloader.Updater.csproj", "{69604D7A-DB01-495F-A9C4-A490FCB2D003}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHub.ReleaseDownloader", "GitHub.ReleaseDownloader\GitHub.ReleaseDownloader.csproj", "{0A6AC07D-97EA-4C34-AB8C-C1D9114260F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +35,22 @@ Global
 		{8DA0FA50-BF7F-4149-82D1-E6E0DCA430A6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8DA0FA50-BF7F-4149-82D1-E6E0DCA430A6}.Release|x64.ActiveCfg = Release|x64
 		{8DA0FA50-BF7F-4149-82D1-E6E0DCA430A6}.Release|x64.Build.0 = Release|x64
+		{69604D7A-DB01-495F-A9C4-A490FCB2D003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69604D7A-DB01-495F-A9C4-A490FCB2D003}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69604D7A-DB01-495F-A9C4-A490FCB2D003}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{69604D7A-DB01-495F-A9C4-A490FCB2D003}.Debug|x64.Build.0 = Debug|Any CPU
+		{69604D7A-DB01-495F-A9C4-A490FCB2D003}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69604D7A-DB01-495F-A9C4-A490FCB2D003}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69604D7A-DB01-495F-A9C4-A490FCB2D003}.Release|x64.ActiveCfg = Release|Any CPU
+		{69604D7A-DB01-495F-A9C4-A490FCB2D003}.Release|x64.Build.0 = Release|Any CPU
+		{0A6AC07D-97EA-4C34-AB8C-C1D9114260F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A6AC07D-97EA-4C34-AB8C-C1D9114260F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A6AC07D-97EA-4C34-AB8C-C1D9114260F6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0A6AC07D-97EA-4C34-AB8C-C1D9114260F6}.Debug|x64.Build.0 = Debug|Any CPU
+		{0A6AC07D-97EA-4C34-AB8C-C1D9114260F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A6AC07D-97EA-4C34-AB8C-C1D9114260F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A6AC07D-97EA-4C34-AB8C-C1D9114260F6}.Release|x64.ActiveCfg = Release|Any CPU
+		{0A6AC07D-97EA-4C34-AB8C-C1D9114260F6}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
