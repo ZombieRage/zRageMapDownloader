@@ -40,7 +40,7 @@ namespace zRageMapDownloader.Core
 
         public bool ExistsInMapsFolder()
         {
-            var mapsPath = _serverContext.GetMapsDirectory();
+            var mapsPath = _serverContext.MapsDirectory ?? _serverContext.GetMapsDirectory();
             var exists = File.Exists(Path.Combine(mapsPath, LocalFileName));
 
             return exists;
