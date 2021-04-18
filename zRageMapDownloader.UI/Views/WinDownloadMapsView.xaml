@@ -54,7 +54,7 @@
                 <Button Visibility="{Binding DownloadInProgress, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" Command="{Binding CancelDownloadCommand}" Margin="0 12" HorizontalAlignment="Right" Padding="8" Content="Cancel Download"/>
             </StackPanel>
 
-            <TextBox Text="{Binding Log, UpdateSourceTrigger=PropertyChanged}" Padding="4" AcceptsReturn="True" IsReadOnly="True" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <TextBox x:Name="txtLog" Text="{Binding Log, UpdateSourceTrigger=PropertyChanged}" Padding="4" AcceptsReturn="True" IsReadOnly="True" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                 <i:Interaction.Behaviors>
                     <behaviors:PutCursorAtEndTextBoxBehavior/>
                 </i:Interaction.Behaviors>

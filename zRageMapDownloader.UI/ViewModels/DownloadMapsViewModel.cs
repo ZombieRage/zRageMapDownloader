@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using zRageMapDownloader.Commands;
 using zRageMapDownloader.Core;
-using zRageMapDownloader.ViewModels;
 using zRageMapDownloader.Views;
 
 namespace zRageMapDownloader.ViewModels
@@ -131,7 +125,7 @@ namespace zRageMapDownloader.ViewModels
                     return;
                 }
 
-                if (!ReplaceExistingMaps && map.ExistsInMapsFolder())
+                if (!ReplaceExistingMaps && map.ExistsInMapsFolder(MapManager.MapsDirectory))
                 {
                     AppendToLog($"{map} already exists. Skipping...");
                     Progress++;
@@ -178,6 +172,16 @@ namespace zRageMapDownloader.ViewModels
             vmMapsSelector.BindMapsObject(Maps);
 
             win.ShowDialog();
+        }
+
+        public void ForceRebind(DownloadMapsViewModel vm)
+        {
+            MapManager = vm.MapManager;
+            Server = vm.Server;
+            Maps = vm.Maps;
+            ReplaceExistingMaps = vm.ReplaceExistingMaps;
+            MapsToDownload = vm.MapsToDownload;
+            DownloadInProgress = vm.DownloadInProgress;
             MapsSelectionStatus = $"{Maps.Count(x => !x.SkipOnDownload)} / {Maps.Count()} maps";
         }
     }

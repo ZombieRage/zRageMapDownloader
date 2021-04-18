@@ -1,21 +1,12 @@
 ﻿using GitHub.ReleaseDownloader;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
+using zRageMapDownloader.Core;
 
 namespace zRageMapDownloader.Updater
 {
@@ -24,19 +15,11 @@ namespace zRageMapDownloader.Updater
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly string _registryPath = @"Software\ZombieRageBrasil\MapDownloader";
-        private readonly string _versionKey = "Version";
-
-        private readonly string _appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        private readonly string _appFolderName = "zRageMapDownloader";
-        private readonly string _appFileName = "ZRAGE.BRASIL.Map.Downloader.exe";
-        private string _appPath => Path.Combine(_appDataPath, _appFolderName);
-        private string _appFile => Path.Combine(_appPath, _appFileName);
-
         public MainWindow()
         {
             Visibility = Visibility.Hidden;
-            Directory.CreateDirectory(_appPath);
+            Directory.CreateDirectory(Utils.APP_PATH);
+
 
             CloseApplicationIfOpen();
             InitializeComponent();
@@ -57,7 +40,7 @@ namespace zRageMapDownloader.Updater
             string author = "ZombieRage";
             string repo = "zRageMapDownloader";
             bool includePreRelease = true;
-            IReleaseDownloaderSettings settings = new ReleaseDownloaderSettings(httpClient, author, repo, includePreRelease, _appPath);
+            IReleaseDownloaderSettings settings = new ReleaseDownloaderSettings(httpClient, author, repo, includePreRelease, Utils.APP_PATH);
 
             // create downloader
             IReleaseDownloader downloader = new ReleaseDownloader(settings);
@@ -70,7 +53,7 @@ namespace zRageMapDownloader.Updater
 
             string currentVersion = GetVersionKeyInfo();
             bool installNewVersion = !string.IsNullOrEmpty(currentVersion) ? !downloader.IsLatestRelease(currentVersion) : true;
-            if (installNewVersion || !File.Exists(_appFile))
+            if (installNewVersion || !File.Exists(Utils.APP_FILE))
             {
                 DispatchIfNecessary(() => 
                 {
@@ -82,9 +65,10 @@ namespace zRageMapDownloader.Updater
 
                 var downloadedVersion = downloader.GetLatestReleaseVersion();
                 UpdateVersionKeyInfo(downloadedVersion);
+                RegisterCustomUrlScheme();
             }
 
-            if (File.Exists(_appFile))
+            if (File.Exists(Utils.APP_FILE))
             {
                 DispatchIfNecessary(() =>
                 {
@@ -93,7 +77,7 @@ namespace zRageMapDownloader.Updater
                     pbProgress.Value = 1;
                 });
 
-                ProcessStartInfo psi = new ProcessStartInfo(_appFile);
+                ProcessStartInfo psi = new ProcessStartInfo(Utils.APP_FILE);
                 Process.Start(psi);
             }
             else
@@ -115,14 +99,14 @@ namespace zRageMapDownloader.Updater
 
         private void UpdateVersionKeyInfo(string version)
         {
-            RegistryKey reg = Registry.CurrentUser.CreateSubKey(_registryPath, RegistryKeyPermissionCheck.ReadWriteSubTree);
-            reg.SetValue(_versionKey, version);
+            RegistryKey reg = Registry.CurrentUser.CreateSubKey(Utils.REGISTRY_PATH, RegistryKeyPermissionCheck.ReadWriteSubTree);
+            reg.SetValue(Utils.VERSION_KEY, version);
         }
 
         private string GetVersionKeyInfo()
         {
-            RegistryKey reg = Registry.CurrentUser.CreateSubKey(_registryPath, RegistryKeyPermissionCheck.ReadWriteSubTree);
-            return reg.GetValue(_versionKey)?.ToString();
+            RegistryKey reg = Registry.CurrentUser.CreateSubKey(Utils.REGISTRY_PATH, RegistryKeyPermissionCheck.ReadWriteSubTree);
+            return reg.GetValue(Utils.VERSION_KEY)?.ToString();
         }
 
         private void DispatchIfNecessary(Action action)
@@ -135,10 +119,25 @@ namespace zRageMapDownloader.Updater
 
         private void CloseApplicationIfOpen()
         {
-            var procs = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(_appFileName));
+            var procs = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Utils.APP_FILE_NAME));
             foreach (var proc in procs)
             {
                 proc.Kill();
+            }
+        }
+
+        private void RegisterCustomUrlScheme()
+        {
+            try
+            {
+                var mainKey = Registry.CurrentUser.OpenSubKey("Software", true).OpenSubKey("Classes", true);
+                RegistryKey key = mainKey.CreateSubKey(Utils.APP_FILE);
+                key.SetValue("URL Protocol", "");
+                key.CreateSubKey(@"shell\open\command").SetValue("", $"{Utils.APP_FILE} %1");
+            }
+            catch (System.Exception e)
+            {
+                MessageBox.Show($"Error while registering custom URL: {e.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }

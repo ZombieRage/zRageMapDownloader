@@ -1,15 +1,21 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace zRageMapDownloader.Core
 {
     public static class Utils
     {
+        public static readonly string REGISTRY_PATH = @"Software\ZombieRageBrasil\MapDownloader";
+        public static readonly string VERSION_KEY = "Version";
+        public static readonly string CUSTOM_URL_KEY = "zragedl";
+
+        public static readonly string APP_DATA_PATH = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        public static readonly string APP_FOLDER_NAME = "zRageMapDownloader";
+        public static readonly string APP_FILE_NAME = "ZRAGE.BRASIL.Map.Downloader.exe";
+        public static string APP_PATH => Path.Combine(APP_DATA_PATH, APP_FOLDER_NAME);
+        public static string APP_FILE => Path.Combine(APP_PATH, APP_FILE_NAME);
+
         private static readonly string _defaultRegistryKey = "ServersContextRemoteFile";
         public static readonly string DefaultServersContextRemoteFile = "https://raw.githubusercontent.com/quasemago/zrageservers/master/MapDownloaderApp/servers.json";
         public static string GetServersContextRemoteFile()

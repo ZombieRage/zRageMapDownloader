@@ -38,9 +38,9 @@ namespace zRageMapDownloader.Core
             RemoteFileName = _serverContext.FastdlUrl + DownloadableFileName;
         }
 
-        public bool ExistsInMapsFolder()
+        public bool ExistsInMapsFolder(string mapsFolder)
         {
-            var mapsPath = _serverContext.MapsDirectory ?? _serverContext.GetMapsDirectory();
+            var mapsPath = mapsFolder ?? _serverContext.GetMapsDirectory();
             var exists = File.Exists(Path.Combine(mapsPath, LocalFileName));
 
             return exists;
