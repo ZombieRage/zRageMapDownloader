@@ -39,7 +39,7 @@ namespace zRageMapDownloader.Updater
             HttpClient httpClient = new HttpClient();
             string author = "ZombieRage";
             string repo = "zRageMapDownloader";
-            bool includePreRelease = true;
+            bool includePreRelease = false;
             IReleaseDownloaderSettings settings = new ReleaseDownloaderSettings(httpClient, author, repo, includePreRelease, Utils.APP_PATH);
 
             // create downloader
