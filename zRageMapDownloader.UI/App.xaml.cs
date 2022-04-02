@@ -48,7 +48,6 @@ namespace zRageMapDownloader
             {
                 var mainWin = new WinServerSelectionView();
                 mainWin.Show();
-                Current.Shutdown();
             }
         }
 

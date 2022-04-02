@@ -1,4 +1,5 @@
 ﻿using ICSharpCode.SharpZipLib.BZip2;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -147,6 +148,18 @@ namespace zRageMapDownloader.Core
                     Thread.Sleep(1000);
                 }
             } while (tries < 5);
+        }
+
+        public static string GetLastMapsFolder()
+        {
+            RegistryKey reg = Registry.CurrentUser.CreateSubKey(Utils.REGISTRY_PATH, RegistryKeyPermissionCheck.ReadWriteSubTree);
+            return reg.GetValue(Utils.MAPS_FOLDER_KEY)?.ToString();
+        }
+
+        public static void SaveLastMapsFolder(string mapsFolder)
+        {
+            RegistryKey reg = Registry.CurrentUser.CreateSubKey(Utils.REGISTRY_PATH, RegistryKeyPermissionCheck.ReadWriteSubTree);
+            reg.SetValue(Utils.MAPS_FOLDER_KEY, mapsFolder);
         }
     }
 }

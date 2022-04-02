@@ -105,6 +105,8 @@ namespace zRageMapDownloader.ViewModels
             DownloadInProgress = true;
             MapManager.Canceled = false;
 
+            MapManager.SaveLastMapsFolder(MapManager.MapsDirectory);
+
             // filters the selected maps
             var maps = Maps.Where(x => !x.SkipOnDownload);
             MapsToDownload = maps.Count();

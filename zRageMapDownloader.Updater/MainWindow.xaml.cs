@@ -17,6 +17,7 @@ namespace zRageMapDownloader.Updater
     {
         public MainWindow()
         {
+            RegisterCustomUrlScheme();
             Visibility = Visibility.Hidden;
             Directory.CreateDirectory(Utils.APP_PATH);
 
@@ -131,7 +132,7 @@ namespace zRageMapDownloader.Updater
             try
             {
                 var mainKey = Registry.CurrentUser.OpenSubKey("Software", true).OpenSubKey("Classes", true);
-                RegistryKey key = mainKey.CreateSubKey(Utils.APP_FILE);
+                RegistryKey key = mainKey.CreateSubKey(Utils.CUSTOM_URL_KEY);
                 key.SetValue("URL Protocol", "");
                 key.CreateSubKey(@"shell\open\command").SetValue("", $"{Utils.APP_FILE} %1");
             }

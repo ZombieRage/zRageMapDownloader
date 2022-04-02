@@ -27,45 +27,15 @@ namespace zRageMapDownloader.Core
             return list;
         }
 
-        public static string GetMapsDirectory(this ServerModel server)
+        public static string GetMapsDirectory(this ServerModel serverModel)
         {
-            string registryValue = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam", "SteamPath", null);
-
-            if (registryValue == null)
+            var lastMapsFolder = MapManager.GetLastMapsFolder();
+            if (lastMapsFolder == null || !Directory.Exists(lastMapsFolder))
             {
-                return null;
+                return "";
             }
 
-            string libraryInfoFileContents = File.ReadAllText(registryValue.Replace("/", @"\") + @"\steamapps\libraryfolders.vdf");
-            List<string> libraryFolders = new List<string>();
-
-            for (int i = 1; true; i++)
-            {
-                if (!libraryInfoFileContents.Contains("\"" + i + "\""))
-                {
-                    break;
-                }
-
-                libraryFolders.Add(libraryInfoFileContents.Split(new string[] { "\"" + i + "\"		\"" }, StringSplitOptions.None)[1].Split('"')[0].Replace(@"\\", @"\"));
-            }
-
-            libraryFolders.Add(registryValue.Replace("/", @"\"));
-
-            string dir = null;
-            foreach (string folder in libraryFolders)
-            {
-                string acfFile = folder + $@"\steamapps\appmanifest_{server.SteamApplicationID}.acf";
-
-                if (File.Exists(acfFile))
-                {
-                    string installDir = File.ReadAllText(acfFile).Split(new string[] { "\"installdir\"		\"" }, StringSplitOptions.None)[1].Split('"')[0];
-
-                    dir = folder.Substring(0, 1).ToUpper() + folder.Substring(1).Replace("program files", "Program Files") + $@"\steamapps\common\{installDir}{server.MapsDirectory}";
-                    break;
-                }
-            }
-
-            return dir;
+            return lastMapsFolder;
         }
     }
 }

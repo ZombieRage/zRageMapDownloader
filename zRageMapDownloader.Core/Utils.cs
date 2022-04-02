@@ -8,6 +8,7 @@ namespace zRageMapDownloader.Core
     {
         public static readonly string REGISTRY_PATH = @"Software\ZombieRageBrasil\MapDownloader";
         public static readonly string VERSION_KEY = "Version";
+        public static readonly string MAPS_FOLDER_KEY = "MapsFolder";
         public static readonly string CUSTOM_URL_KEY = "zragedl";
 
         public static readonly string APP_DATA_PATH = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
